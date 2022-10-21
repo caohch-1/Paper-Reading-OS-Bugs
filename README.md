@@ -31,16 +31,19 @@
 
 ### Concepts
 - Hadoop Distributed File System (HDFS): [HDFS Noob Tutorial](https://zhuanlan.zhihu.com/p/21249592)
-- 
+- Remote Procedure Call (RPC): [What's RPC](https://www.jianshu.com/p/7d6853140e13)
+- Blocking Methods: [Blocking Methods in Java](https://www.geeksforgeeks.org/blocking-methods-in-java/)
 
 ### Tools
 - Java Virtual Machine Stack Trace (jstack): jstack prints Java stack traces of Java threads for a given Java process or core file or a remote debug server
 - Dscope/Tscope: [Hang bug detector1](https://dl.acm.org/doi/10.1145/3267809.3267844), [Hang bug detector2](https://ieeexplore.ieee.org/document/8498121)
-- 
 
 ### Notes
 - 目的是自动化对云计算系统中的hang bug进行修复，具体而言输入是系统/应用bytecode和能产生bug的test case，输出是该bug的fix patch；
 - 方法分为4步: 1)利用stack trace来确定hang在哪个函数 2)我们会有一些预定义的hang bug root cause pattern(i.e., 3种infinite loop和一种blocking)，用step1中确定的函数去match最匹配的pattern 3)每个pattern会有我们设计好的fix patch，插进去 4)再跑一遍detector和一些回归测试看看是否成功fix 
-- Pattern以及对应的fix都是人工定义的，如果pattern的编写有一套系统化的规则方便开发者/运维人员添加那会很好，当然如果这部分能够自动化会更好，同时Pattern的表示和对应fix在本文中局限于java(i.e., Java IR code)，或许可以用更加general的表示达到cross-language的效果，因为之前读过一篇[相关的文章虽然不是针对hang bug fixing的](https://dl.acm.org/doi/10.1145/3468264.3468538)但是对这两点都做到了，maybe套过来可行；
 - Step1中利用jstack获取不同stack trace dump files，比对得到重复出现的functions，并选取其中处于栈顶的那一个便是hang function，直觉上讲这个算法符合hang bug的特点；
-- 
+- Step2中如果hang function有多个loop怎么判断是哪个引发hang，全都与pattern做一下match么，好像没有看到相关的解释；
+- Step2&3中pattern以及对应的fix都是人工定义的，如果pattern的编写有一套系统化的规则方便开发者/运维人员添加那会很好，当然如果这部分能够自动化会更好，同时pattern的表示和对应fix在本文中局限于java(i.e., Java IR code)，或许可以用更加general的表示达到cross-language的效果，因为之前读过一篇[相关的文章虽然不是针对hang bug fixing的](https://dl.acm.org/doi/10.1145/3468264.3468538)但是对这两点都做到了，maybe套过来可行；
+- 对许多real-world hang bugs跑了一下实验，效果还是很不错的，fix patch产生速度很快同时成功率很高，并且不会造成什么overhead毕竟基本上就是加一个checker code block；
+- 对于pattern matching和fix patch inserting的细节仍然不太清楚，可能要阅读源代码才能知道，不过读这篇主要目的是想用作者提供的数据集做自己的实验，按照github上的readme能跑通作者提供的`triggerbug_xxxx.sh`应该就够了；
+- Hangfix的输入testcase似乎都是手写的，或许可以研究如何自动化去生成；
