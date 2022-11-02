@@ -47,3 +47,27 @@
 - 对许多real-world hang bugs跑了一下实验，效果还是很不错的，fix patch产生速度很快同时成功率很高，并且不会造成什么overhead毕竟基本上就是加一个checker code block；
 - 对于pattern matching和fix patch inserting的细节仍然不太清楚，可能要阅读源代码才能知道，不过读这篇主要目的是想用作者提供的数据集做自己的实验，按照github上的readme能跑通作者提供的`triggerbug_xxxx.sh`应该就够了；
 - Hangfix的输入testcase似乎都是手写的，或许可以研究如何自动化去生成；
+
+## Sage: Practical & Scalable ML-Driven Performance Debugging in Microservices
+
+### Concepts
+- Quality of Service(QoS): [What's QoS](https://info.support.huawei.com/info-finder/encyclopedia/zh/QoS.html)
+- Variational graph auto-encoders(VGAE): [VGAE Paper Explanation](https://zhuanlan.zhihu.com/p/78340397)
+- Service Level Agreement(SLA): [What's SLA](https://www.cio.com/article/274740/outsourcing-sla-definitions-and-solutions.html)
+- Causal Bayesian Network(CBN): 按照[Difference between BN and CBN](https://stackoverflow.com/questions/2113570/what-is-the-difference-between-causal-models-and-directed-graphical-models)的说法两者有区别，但是这篇paper中似乎CBN指的就是BN
+- Mutal Information: [What's mutal info.](https://blog.csdn.net/qq_40131306/article/details/124167150)
+- But-for test: [The but-for test](https://www.enjuris.com/personal-injury-law/the-but-for-test/)，法学中判断个体有罪的逻辑
+- Conditional Variational AutoEncoder(CVAE): [VAE v.s. CVAE](https://www.jianshu.com/p/94d68a03c13e)
+- 
+
+### Tools
+- Dapper, Zipkin, Jaeger, Google-Wide Profiling(GWP): Production-level distributed tracing systems
+- 
+
+### Notes
+- Sec.2-Related Work部分介绍了很多实用的数据集和工具，以后可能用得上
+- CBN的设计初看有点迷惑，但是其实是基于四条规则，而这四条规则源于Sec.3-2中介绍的RPC延迟传播规律，Fig.5很好展示了一个简单的RPC chain对应的CBN的全貌，![Fig.5](./imgs/Sage-5.jpeg)
+- 对于一个常规的预测任务我们没必要知道Z也就是latent space的情况，但是作者在这里去计算的分布十分关注Z，原因在于Sage需要的是一个生成模型，生成模型需要latent vector从而去enocde/decode输入
+- enDeps($Z^s_j$)中包含了$Y_{v\_structure(j)}$，通过Fig.5可以了解到这指代什么但是不确定为什么需要这个，文章只说"derived from the information flow according to the structure of the CBN" (呜呜，我，概率论，菜菜)
+- SREs常常改变有可能的root cause variable并固定其他所有变量/设备来测试哪里出问题，Sage采用类似的方法，改变某个X然后利用latent vector(Z)生成Y，看Y是否正常，换言之，利用CBN和生成网络模拟SREs做的事情从而不需要在物理上进行测试，降低了性能损耗与时间
+- 
