@@ -84,3 +84,18 @@
 - 从识别和修复准确率上来看Seer和Sage差不太多，Sage的优点在于无需很多system stack级别的插桩获得输入数据从而拥有在real-word中更高的practicality
 - Tracing frequency对Sage的表现影响不大，这是很优秀的特点，许多基于时序pattern的检测系统在实际中很难应用而Sage不使用pattern从而避免了这一问题
 - Sage在设计上考虑地非常周到且实际效果很好，细节很多如果之后要用到这篇paper的内容需要再仔细看下MarginNote里重点划出的地方
+
+## DeepTraLog: Trace-Log Combined Microservice Anomaly Detection through Graph-based Deep Learning
+
+### Concepts
+- Support Vector Data Description(SVDD): [SVDD基本原理](https://blog.csdn.net/qq_35356741/article/details/115266192)
+- 
+
+### Tools
+- OpenTracing, SkyWalking: Distributed tracing tools
+- 
+
+### Notes
+- 目的是做个异常检测器，输入是traces and logs，输出是是否异常，模型使用基于SVDD的GGNN
+- 出发点是现有的方法要么只用trace要么只用log，这有两个不足之处1)假设服务A和服务B上的log对于某一状态的描述冲突也就意味着出现异常，仅仅使用trace或者log都无法发现问题 2)log和trace的结合不能用序列表示，考虑到异步以及并行调用log和trace的顺序并非一定的，但是他们之间的结构是一定的，也就是调用图，所以应该用图表示
+- 
