@@ -85,6 +85,22 @@
 - Tracing frequency对Sage的表现影响不大，这是很优秀的特点，许多基于时序pattern的检测系统在实际中很难应用而Sage不使用pattern从而避免了这一问题
 - Sage在设计上考虑地非常周到且实际效果很好，细节很多如果之后要用到这篇paper的内容需要再仔细看下MarginNote里重点划出的地方
 
+## Trace Analysis Based Microsoft Architecture Measurement
+
+### Concepts
+- Horizontal pod autoscaler(HPA): [kubernetes自动扩容之Horizontal Pod Autoscaling(HPA)](https://www.cnblogs.com/linux20190409/p/10976222.html)
+- Command and Query Responsibility Segregation(CQRS): [CQRS pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs), [DDD中的那些模式—CQRS](https://zhuanlan.zhihu.com/p/115685384)
+- Cyclomatic Complexity: [代码的圈复杂度](https://zhuanlan.zhihu.com/p/139386961), [What Is Cyclomatic Complexity?](https://www.perforce.com/blog/qac/what-cyclomatic-complexity#:~:text=Cyclomatic%20complexity%20(CYC)%20is%20a,the%20more%20complex%20the%20code.)
+
+### Tools
+- Neo4j: World’s leading Graph Database
+
+### Notes
+- 目的是评估一个微服务系统架构，通过设计的14个指标来看系统架构是否设计得完善，输入是系统的trace
+- 在Trace的处理上对OpenTracing作了拓展，主要两方面1)为每个span记录它的data access(i.e.,主要是通过数据库操作) 2)将trace抽象成了不同类别，当然随之也为span和request抽象
+- 14个指标的设计很有意思，都比较符合经验性的、直觉上的理解
+
+
 ## DeepTraLog: Trace-Log Combined Microservice Anomaly Detection through Graph-based Deep Learning
 
 ### Concepts
