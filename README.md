@@ -105,13 +105,19 @@
 
 ### Concepts
 - Support Vector Data Description(SVDD): [SVDD基本原理](https://blog.csdn.net/qq_35356741/article/details/115266192)
-- 
+- Global Vectors for Word Representation(GloVe): [GloVe学习](https://blog.csdn.net/XB_please/article/details/103602964)
+- t-Distributed Stochastic Neighbor Embedding(t-SNE): [An Introduction to t-SNE with Python Example](https://towardsdatascience.com/an-introduction-to-t-sne-with-python-example-5a3a293108d1)
 
 ### Tools
 - OpenTracing, SkyWalking: Distributed tracing tools
-- 
+- Drain: [Drain3 is an online log template miner that can extract templates (clusters) from a stream of log messages in a timely manner.](https://github.com/logpai/Drain3)
+- Term frequency–Inverse document frequency(TF-IDF): [机器学习：生动理解TF-IDF算法](https://zhuanlan.zhihu.com/p/31197209)
+- Fudan SELab train-ticket-fault-replicate dataset: [Train-ticket数据集的fault-inject版本](https://github.com/FudanSELab/train-ticket-fault-replicate)
 
 ### Notes
 - 目的是做个异常检测器，输入是traces and logs，输出是是否异常，模型使用基于SVDD的GGNN
 - 出发点是现有的方法要么只用trace要么只用log，这有两个不足之处1)假设服务A和服务B上的log对于某一状态的描述冲突也就意味着出现异常，仅仅使用trace或者log都无法发现问题 2)log和trace的结合不能用序列表示，考虑到异步以及并行调用log和trace的顺序并非一定的，但是他们之间的结构是一定的，也就是调用图，所以应该用图表示
+- TEG的表示基于点集、邻接矩阵和点特征矩阵，似乎是不包含边的信息描述，这会丢失一部分信息，不知道是受限于GGNN还是缺少好的对边的编码方式(i.e.,边特征向量)
+- 虽然在VIS时候会标出哪些node对于产生异常的贡献最大，从而方便定位trace中可能哪里出现了问题，然而即使从Fig.5中也不难发现标出的node很多，而且基于Eq.5计算出的每个node的分数为什么就能反映该node问题比较大，这是缺少严格的论证的，只是比较符合直觉，这样的异常检测器的可解释性比较差，不利用进一步对异常原因进行定位和分析
+- 对于使用Deep Learning相关技术的paper还是比较希望对于work和不work的情况做些case study，基于图表示的方法虽然有效但是它到底能检测到哪些不能检测到哪些依然不清不出
 - 
