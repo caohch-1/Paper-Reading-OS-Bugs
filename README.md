@@ -120,4 +120,37 @@
 - TEG的表示基于点集、邻接矩阵和点特征矩阵，似乎是不包含边的信息描述，这会丢失一部分信息，不知道是受限于GGNN还是缺少好的对边的编码方式(i.e.,边特征向量)
 - 虽然在VIS时候会标出哪些node对于产生异常的贡献最大，从而方便定位trace中可能哪里出现了问题，然而即使从Fig.5中也不难发现标出的node很多，而且基于Eq.5计算出的每个node的分数为什么就能反映该node问题比较大，这是缺少严格的论证的，只是比较符合直觉，这样的异常检测器的可解释性比较差，不利用进一步对异常原因进行定位和分析
 - 对于使用Deep Learning相关技术的paper还是比较希望对于work和不work的情况做些case study，基于图表示的方法虽然有效但是它到底能检测到哪些不能检测到哪些依然不清不出
+
+## Drain: An Online Log Parsing Approcah with Fixed Depth Tree
+
+### Concepts
+- null
+
+### Tools
+- null
+
+### Notes
+- 目的是一个 log parser，也就是输入raw log，输出log template(event)并能将他们分类成不同组
+- Drain做到了online parsing，不需要大量的离线数据训练parser，一个很大的优点在于不担心出现没见过的log就无法parse
+- Drain允许user使用regex来预处理raw log从而提高之后的准确率，可以预先去除掉IP, file path, perctange num等等更具user自己的domain knowledge和需求来设计
+- 整体思路很简单，其实就是对log做层层匹配
+
+
+## Robust Log-Based Anomaly Detection on Unstable Log Data (Postponed, read Drain first)
+
+### Concepts
+- Log event: constant part in a log
+- Log parameter: variable part in a log
+- Log sequence: Log events belong to the same task
+
+### Tools
+- Logparser: [Logparser provides a toolkit and benchmarks for automated log parsing](https://github.com/logpai/logparser) 包含了Drain,但是与Drain3使用不太相同，这里需要输入log_format
+- Drain3: [logapi/drain3](https://github.com/logpai/Drain3) 进化版的drain   
+- FastText: [Library for efficient text classification and representation learning](https://fasttext.cc/) 有pre-trained的model和对应dataset
+
+### Notes
+- 目的是异常检测器，输入是Logs，输出是是否异常，特点在于log event可以是未知的，模型使用attention-based Bi-LSTM
+- 在真实世界的生产环境中，log statement是频繁变化的，因为系统开发者和维护者会频繁升级修复系统源代码。故而也会同时修改增加log
+- log可能来源于不同node，会出现重复、乱序等情况，且常见的从log中获取event信息的方法是使用parser，但是往往准确率不高，引入许多噪声
+- 现有工作都基于log event和sequence的pattern是固定的这一假设，在生产环境中不现实
 - 
